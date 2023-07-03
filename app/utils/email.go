@@ -21,7 +21,7 @@ func GenerateConfirmationCode() string {
 
 // Функция генерации ссылки для подтверждения почты
 func GenerateConfirmationLink(userID string) string {
-	baseURL := "https://cargo-track-auth.onrender.com/shipper/confirm-email" // Замените на ваш базовый URL
+	baseURL := "http://localhost:8080/shipper/confirm-email" // Замените на ваш базовый URL
 
 	// Формирование ссылки с параметрами userID и confirmationCode
 	link := fmt.Sprintf("%s/%s", baseURL, userID)
@@ -31,7 +31,7 @@ func GenerateConfirmationLink(userID string) string {
 
 // Функция генерация ссылки для подтверждения компании
 func GenerateConfirmationLinkAdmin(freightCompanyID string) string {
-	baseURL := "https://cargo-track-auth.onrender.com//admin/confirm-register-company" // Замените на ваш базовый URL
+	baseURL := "http://localhost:8080/admin/confirm-register-company" // Замените на ваш базовый URL
 
 	// Формирование ссылки с параметрами userID и confirmationCode
 	link := fmt.Sprintf("%s/%s", baseURL, freightCompanyID)
@@ -50,10 +50,10 @@ func SendConfirmationEmail(email, code, link string) error {
 	// Генерация ссылки для подтверждения
 
 	// Формирование письма
-	from := smtpUsername
+	from := "CARGO_TRACK"
 	to := []string{email}
-	subject := "Подтверждение регистрации"
-	body := fmt.Sprintf("Ссылка для подтверждения: %s", link)
+	subject := "Сonfirm email"
+	body := fmt.Sprintf("You have registered with the service Cargo Track \n\n Please, follow the link to verify your account \n\n%s", link)
 
 	message := []byte(fmt.Sprintf("From: %s\r\n"+
 		"To: %s\r\n"+

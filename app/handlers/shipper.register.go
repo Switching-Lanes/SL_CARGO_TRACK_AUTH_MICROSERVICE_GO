@@ -104,6 +104,7 @@ func ShipperRegisterHandler(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "Регистраци прошла успешно",
 	})
+
 }
 
 // Функция генерации кода подтверждения

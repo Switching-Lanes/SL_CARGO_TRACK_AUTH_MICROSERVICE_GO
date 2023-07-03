@@ -71,5 +71,8 @@ func ConfirmEmailHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Почта успешно подтверждена"})
+	c.JSON(http.StatusOK, gin.H{
+		"shipper": user,
+		"message": "Почта успешно подтверждена",
+	})
 }

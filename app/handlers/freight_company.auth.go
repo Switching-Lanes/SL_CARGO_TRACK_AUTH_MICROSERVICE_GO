@@ -58,5 +58,9 @@ func FreightCompanyLogin(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Не удалось обновить токены пользователя"})
 		return
 	}
-	c.JSON(http.StatusOK, company)
+	c.JSON(http.StatusOK, gin.H{
+		"freight_company": input,
+		"access_token":  accessToken,
+		"refresh_token": refreshToken,
+	})
 }

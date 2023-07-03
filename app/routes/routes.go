@@ -36,8 +36,8 @@ func SetupRouter() *gin.Engine {
 	RefreshTokenGroup := router.Group("/refresh_token")
 	{
 		RefreshTokenGroup.POST("/freight_company", handlers.FreightCompanyRefreshTokenHandler)
-		// RefreshTokenGroup.POST("/shipper", handlers.ShipperRefreshTokenHandler)
-		// RefreshTokenGroup.POST("/freight_company_employee", handlers.FreightCompanyEmployeeRefreshTokenHandler)
+		RefreshTokenGroup.POST("/shipper", handlers.ShipperRefreshTokenHandler)
+		RefreshTokenGroup.POST("/freight_company_employee", handlers.UserRefreshTokenHandler)
 
 	}
 

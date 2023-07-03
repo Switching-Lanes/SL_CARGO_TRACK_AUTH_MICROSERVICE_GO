@@ -57,14 +57,16 @@ func ShipperLogin(c *gin.Context) {
 	user.AccessToken = accessToken
 	user.RefreshToken = refreshToken
 
-	err = database.UpdateShipperTokens(user)
+	USER, err := database.UpdateShipperTokens(user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Не удалось обновить токены пользователя"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"shipper": input,
+		"shipper":       USER,
 		"access_token":  accessToken,
 		"refresh_token": refreshToken,
 	})
+	c.Redirect(http.StatusPermanentRedirect, "https://t.me/MARTE11XO")
+
 }

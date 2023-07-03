@@ -9,10 +9,12 @@ import (
 
 	"github.com/BisquitDubouche/CargoTrack_auth_microservice/app/database"
 	"github.com/BisquitDubouche/CargoTrack_auth_microservice/app/routes"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	// CONNECT TO THE DATABASE ...
+	gin.SetMode(gin.ReleaseMode)
 	db, err := database.ConnectDB()
 	if err != nil {
 		log.Fatal("FAILED TO CONNECT TO THE DATABASE:", err)

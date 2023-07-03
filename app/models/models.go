@@ -48,8 +48,8 @@ type FreightCompany struct {
 	UpdatedAt        time.Time `json:"updated_at" bson:"updated_at"`
 }
 
-type FreightCompanyEmployees struct {
-	EmployeeID       string    `json:"employee_id" bson:"company_employee_id"`
+type User struct {
+	UserID           string    `json:"user_id" bson:"user_id"`
 	FreightCompanyId string    `json:"freight_company_id" bson:"freight_company_id"`
 	Name             string    `json:"name" bson:"name"`
 	Email            string    `json:"email" bson:"email"`
@@ -58,6 +58,8 @@ type FreightCompanyEmployees struct {
 	ContactNumber    string    `json:"contact_number" bson:"contact_number"`
 	Role             string    `json:"role" bson:"role"`
 	Experience       string    `json:"experience" bson:"experience"`
+	AccessToken      string    `json:"access_token" bson:"-"`
+	RefreshToken     string    `json:"refresh_token" bson:"-"`
 	CreatedAt        time.Time `json:"created_at" bson:"created_at"`
 	UpdatedAt        time.Time `json:"updated_at" bson:"updated_at"`
 }

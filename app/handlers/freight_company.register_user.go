@@ -11,7 +11,7 @@ import (
 )
 
 func EmployeeRegisterHandler(c *gin.Context) {
-	var input models.FreightCompanyEmployees
+	var input models.User
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
@@ -19,22 +19,20 @@ func EmployeeRegisterHandler(c *gin.Context) {
 	}
 
 	ID := primitive.NewObjectID().Hex()
-	input.EmployeeID = ID
-
-	input.Permissions = "driver"
+	input.UserID = ID
 
 	if input.Password == "" || input.Email == "" || input.ContactNumber == "" || input.Experience == "" || input.Name == "" || input.Role == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Не указаны все обязательные поля"})
 		return
 	}
 
-	accessToken, err := utils.GenerateAccessToken(input.EmployeeID)
+	accessToken, err := utils.GenerateAccessToken(input.UserID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate access token"})
 		return
 	}
 
-	refreshToken, err := utils.GenerateRefreshToken(input.EmployeeID)
+	refreshToken, err := utils.GenerateRefreshToken(input.UserID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate refresh token"})
 		return

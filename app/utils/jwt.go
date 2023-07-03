@@ -97,7 +97,7 @@ func ValidateFreightCompanyToken(tokenString string) (*jwt.Token, error) {
 	return token, nil
 }
 
-func ValidateFreightCompanyRefreshToken(tokenString string) (*jwt.Token, error) {
+func ValidateRefreshToken(tokenString string) (*jwt.Token, error) {
 	tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
 
 	// Проверка валидности токена

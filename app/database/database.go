@@ -17,7 +17,7 @@ var (
 // Подключение к базе данных MongoDB Atlas
 func ConnectDB() (*mongo.Client, error) {
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-	opts := options.Client().ApplyURI("mongodb+srv://switchinglaneskg:Q9AuSRh4556hcSgi@cluster.mchflwh.mongodb.net/?retryWrites=true&w=majority").SetServerAPIOptions(serverAPI)
+	opts := options.Client().ApplyURI("mongodb+srv://switchinglaneskg:FBYaeoCTXGitrbnA@cluster.1lb2zks.mongodb.net/?retryWrites=true&w=majority").SetServerAPIOptions(serverAPI)
 
 	// Создаем нового клиента и подключаемся к серверу
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
@@ -57,7 +57,7 @@ func RunMigrations(client *mongo.Client) error {
 		return err
 	}
 
-	err = createFreightCompanyEmployeesCollection(client)
+	err = createUsersCollection(client)
 	if err != nil {
 		return err
 	}
@@ -105,12 +105,12 @@ func createFreightCompaniesCollection(client *mongo.Client) error {
 }
 
 // Создает коллекцию "employees"
-func createFreightCompanyEmployeesCollection(client *mongo.Client) error {
-	collection := client.Database(DATABASE_NAME).Collection("freight_company_employees")
+func createUsersCollection(client *mongo.Client) error {
+	collection := client.Database(DATABASE_NAME).Collection("users")
 
 	// Создаем уникальный индекс по полю "employee_id"
 	indexModel := mongo.IndexModel{
-		Keys:    bson.M{"freight_company_employee_id": 1},
+		Keys:    bson.M{"user_id": 1},
 		Options: options.Index().SetUnique(true),
 	}
 	_, err := collection.Indexes().CreateOne(context.Background(), indexModel)

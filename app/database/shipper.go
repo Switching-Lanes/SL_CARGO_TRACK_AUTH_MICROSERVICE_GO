@@ -114,6 +114,27 @@ func GetShipperByConfirmationCode(confirmationCode string) (*models.Shipper, err
 	return &user, nil
 }
 
+func GetShipperByRefreshToken(tokenString string) (*models.Shipper, error) {
+	client, err := ConnectDB()
+	if err != nil {
+		log.Fatal("Failed to connect to the database:", err)
+	}
+	defer client.Disconnect(context.Background())
+
+	collection := client.Database(DATABASE_NAME).Collection("shippers")
+
+	var Shipper models.Shipper
+	err = collection.FindOne(context.Background(), bson.M{"refresh_token": tokenString}).Decode(&Shipper)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, errors.New("shipper not found")
+		}
+		return nil, err
+	}
+
+	return &Shipper, nil
+}
+
 // UpdateUser обновляет поля пользователя в базе данных
 func UpdateShipper(userID string, input models.Shipper) error {
 	client, err := ConnectDB()
@@ -152,10 +173,10 @@ func UpdateEmailConfirmationStatus(userID string, isConfirmed bool) error {
 	return nil
 }
 
-func UpdateShipperTokens(shipper *models.Shipper) error {
+func UpdateShipperTokens(shipper *models.Shipper) (*models.Shipper, error) {
 	client, err := ConnectDB()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer client.Disconnect(context.Background())
 
@@ -164,21 +185,30 @@ func UpdateShipperTokens(shipper *models.Shipper) error {
 	// Создаем фильтр для поиска записи Shipper по идентификатору
 	filter := bson.M{"shipper_id": shipper.ShipperID}
 
+	var user models.Shipper
+	err = collection.FindOne(context.Background(), bson.M{"_id": shipper.ShipperID}).Decode(&user)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, errors.New("user not found")
+		}
+		return nil, err
+	}
+
 	// Создаем обновляемый документ с новыми значениями токенов и их сроками действия
 	update := bson.M{
 		"$set": bson.M{
-			"access_token":      shipper.AccessToken,
-			"refresh_token":     shipper.RefreshToken,
+			"access_token":  shipper.AccessToken,
+			"refresh_token": shipper.RefreshToken,
 		},
 	}
 
 	// Обновляем запись Shipper в базе данных
 	_, err = collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return &user, nil
 }
 
 // DeleteUser удаляет пользователя из базы данных

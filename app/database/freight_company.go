@@ -28,7 +28,7 @@ func CreateFreightCompany(freightCompany *models.FreightCompany) error {
 	return nil
 }
 
-func RegisterFreightCompanyEmployee(employee models.FreightCompanyEmployees) error {
+func RegisterFreightCompanyEmployee(employee models.User) error {
 	// Подключение к базе данных
 	client, err := ConnectDB()
 	if err != nil {
