@@ -36,7 +36,7 @@ func RegisterFreightCompanyEmployee(employee models.User) error {
 	}
 	defer client.Disconnect(context.Background())
 
-	collection := client.Database(DATABASE_NAME).Collection("freight_company_employees")
+	collection := client.Database(DATABASE_NAME).Collection("users")
 
 	_, err = collection.InsertOne(context.Background(), employee)
 	if err != nil {

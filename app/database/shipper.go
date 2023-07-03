@@ -123,8 +123,8 @@ func GetShipperByRefreshToken(tokenString string) (*models.Shipper, error) {
 
 	collection := client.Database(DATABASE_NAME).Collection("shippers")
 
-	var Shipper models.Shipper
-	err = collection.FindOne(context.Background(), bson.M{"refresh_token": tokenString}).Decode(&Shipper)
+	var User models.Shipper
+	err = collection.FindOne(context.Background(), bson.M{"refresh_token": tokenString}).Decode(&User)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, errors.New("shipper not found")
@@ -132,7 +132,7 @@ func GetShipperByRefreshToken(tokenString string) (*models.Shipper, error) {
 		return nil, err
 	}
 
-	return &Shipper, nil
+	return &User, nil
 }
 
 // UpdateUser обновляет поля пользователя в базе данных
@@ -173,10 +173,10 @@ func UpdateEmailConfirmationStatus(userID string, isConfirmed bool) error {
 	return nil
 }
 
-func UpdateShipperTokens(shipper *models.Shipper) (*models.Shipper, error) {
+func UpdateShipperTokens(shipper *models.Shipper) error {
 	client, err := ConnectDB()
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer client.Disconnect(context.Background())
 
@@ -184,15 +184,6 @@ func UpdateShipperTokens(shipper *models.Shipper) (*models.Shipper, error) {
 
 	// Создаем фильтр для поиска записи Shipper по идентификатору
 	filter := bson.M{"shipper_id": shipper.ShipperID}
-
-	var user models.Shipper
-	err = collection.FindOne(context.Background(), bson.M{"_id": shipper.ShipperID}).Decode(&user)
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return nil, errors.New("user not found")
-		}
-		return nil, err
-	}
 
 	// Создаем обновляемый документ с новыми значениями токенов и их сроками действия
 	update := bson.M{
@@ -205,10 +196,10 @@ func UpdateShipperTokens(shipper *models.Shipper) (*models.Shipper, error) {
 	// Обновляем запись Shipper в базе данных
 	_, err = collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return &user, nil
+	return nil
 }
 
 // DeleteUser удаляет пользователя из базы данных
